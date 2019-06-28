@@ -21,7 +21,7 @@ defmodule Metronomex.Worker do
   end
 
   def handle_cast(:fire, state = %{channel: channel, exchange: exchange}) do
-    {{year, month, day}, {hour, min, sec}} = date = :erlang.universaltime()
+    {date = {year, month, day}, {hour, min, sec}} = :erlang.universaltime()
     day_of_week = :calendar.day_of_the_week(date)
     routing_key = message = "#{year}.#{month}.#{day}.#{day_of_week}.#{hour}.#{min}.#{sec}"
     AMQP.Basic.publish(channel, exchange, routing_key, message)
@@ -46,9 +46,7 @@ defmodule Metronomex.Worker do
 
   defp amqp_connect_direct(true) do
     import AMQP.Core
-    IO.puts("My node: #{node()}")
-    IO.puts("Params direct: #{inspect amqp_params_direct()}")
-    {:ok, pid} = :amqp_connection.start(amqp_params_direct())
+    {:ok, pid} = :amqp_connection.start(amqp_params_direct(node: node()))
     {:ok, %AMQP.Connection{pid: pid}}
   end
 
