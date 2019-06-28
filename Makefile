@@ -9,7 +9,7 @@ all:
 	mix archive.build
 	$(MAKE) ez
 	@echo "=== All done. You can copy *.ez plus the elixir-1.8.1.ez in the RabbitMQ plugins directory."
-	@echo "=== For a default Linux setup, run `sudo make install`"
+	@echo "=== For a default Linux setup, run 'sudo make install'"
 
 install:
 	install -o rabbitmq -g rabbitmq -m 640 *.ez /usr/lib/rabbitmq/plugins

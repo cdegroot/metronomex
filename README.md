@@ -18,18 +18,19 @@ one :-)).
 
 ```
 git clone git@github.com:elixir-lang/elixir
-cd elixir/lib/elixir
-mix compile
-vi _build/shared/lib/elixir/ebin/elixir.app
+cd elixir
+make
+cd lib
+ln -s elixir elixir-1.8.1
+zip -r elixir-1.8.1.ez elixir-1.8.1/ebin
+rm elixir-1.8.1
 ```
 
-In the `applications` list, Elixir declares itself as a circular dependency. Remove it.
+Put the resulting .ez file in your RabbitMQ directory and you're done. On Linux:
 
 ```
-mix archive.build
+sudo cp elixir-1.8.1.ez /usr/lib/rabbitmq/plugins
 ```
-
-Put the resulting .ez file in your RabbitMQ directory and you're done.
 
 ## Extra notes
 
