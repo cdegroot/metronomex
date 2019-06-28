@@ -11,10 +11,10 @@ defmodule Metronomex.Worker do
   # GenServer implementation
 
   def init([]) do
-    {:ok, connection} = AMQP.Connection.open()
+    {:ok, connection} = amqp_connect_direct()
     {:ok, channel} = AMQP.Channel.open(connection)
     AMQP.Queue.declare(channel, @queue)
-    AMQP.Exchange.declare(channel, @exchange)
+    AMQP.Exchange.declare(channel, @exchange, :topic)
     AMQP.Queue.bind(channel, @queue, @exchange)
     fire()
     {:ok, %{channel: channel, exchange: @exchange}}
@@ -28,5 +28,13 @@ defmodule Metronomex.Worker do
 
   def fire() do
     GenServer.cast(__MODULE__, :fire)
+  end
+
+  # The Elixir AMQP library does not support a direct (in-VM) connection. This
+  # does a direct connection and returns an AMQP library compatible connection.
+  defp amqp_connect_direct() do
+    import AMQP.Core
+    {:ok, pid} = :amqp_connection.start(amqp_params_direct())
+    {:ok, %AMQP.Connection{pid: pid}}
   end
 end
