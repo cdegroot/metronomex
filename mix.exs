@@ -13,9 +13,14 @@ defmodule Metronomex.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
+    extras = if Mix.env == :test do
+      []
+    else
+      [:rabbit, :rabbit_common]
+    end
     [
       mod: {Metronomex.Application, []},
-      extra_applications: [:rabbit, :rabbit_common]
+      extra_applications: extras
     ]
   end
 

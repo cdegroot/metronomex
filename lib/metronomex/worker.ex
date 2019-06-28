@@ -41,6 +41,8 @@ defmodule Metronomex.Worker do
     |> Enum.map(fn {n, _d, _v} -> n end)
     |> Enum.member?(:rabbit)
 
+    IO.puts("Metronomex connecting. Direct mode = #{in_rabbitmq_vm}")
+
     amqp_connect_direct(in_rabbitmq_vm)
   end
 
